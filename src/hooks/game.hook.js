@@ -2,6 +2,9 @@ import {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
 
 export const useGameHook = () => {
+  const totalWickets = 3;
+  const totalOvers = 4.0;
+
   const allPlayers = ['Kirat Boli', 'N.S Nodhi', 'R Rumrah', 'Shashi Henra'];
   const currentlyPlayingsData = [allPlayers[0], allPlayers[1]];
   const remainingPlayersData = [allPlayers[2], allPlayers[3]];
@@ -54,11 +57,17 @@ export const useGameHook = () => {
 
   //Game updates
   useEffect(() => {
-    if (wickets === 3 || currentOver === 4.0 || requiredRuns <= 0) {
+    if (
+      wickets === totalWickets ||
+      currentOver === totalOvers.toFixed(1) ||
+      requiredRuns <= 0
+    ) {
       setIsGameOver(true);
       let winner = '';
       if (requiredRuns <= 0) {
-        winner = `Bengaluru Won the match By ${3 - wickets} Wickets.`;
+        winner = `Bengaluru Won the match By ${
+          totalWickets - wickets
+        } Wickets.`;
       } else {
         winner = `Bengaluru lost the match By ${requiredRuns} Runs.`;
       }
@@ -91,7 +100,7 @@ export const useGameHook = () => {
       newScoreBoard[currentlyPlayings[0]].isOut = true;
 
       //If all wickets are done, the last player only remain in the game
-      if (newWickets === 3) {
+      if (newWickets === totalWickets) {
         newCurrentlyPlayings = [currentlyPlayings[1]];
       } else {
         //If it is not last wicket then only we will update currently playings and remaing players
@@ -126,8 +135,6 @@ export const useGameHook = () => {
     if (totalBallsPlayed % 6 === 0) {
       newCurrentlyPlayings = newCurrentlyPlayings.reverse();
     }
-
-    console.log('currentlyPlayings', currentlyPlayings, newCurrentlyPlayings);
 
     setCurrentlyPlayings(newCurrentlyPlayings);
     setRemainingPlayers(newRemainingPlayers);
